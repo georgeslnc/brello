@@ -1,9 +1,12 @@
-name: Deploy Brello to PROD
+name: Run checks for PR
+
 on:
-  push:
-    branches:
-      - main
-      - setup-cicd
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,15 +29,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Lint and check code
+        run: yarn check
+
       - name: Build project
         run: yarn build
         env:
           NODE_ENV: production
-
-      - name: Publish
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --prod --dir=dist --message="Deploy from ${{ github.event.head_commit.message }}"
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
