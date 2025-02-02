@@ -22,7 +22,7 @@ jobs:
 
       - name: Prepare Yarn
         run: corepack prepare yarn@4.1.0 --activate
-        
+
       - name: Install dependencies
         run: yarn install
 
@@ -33,8 +33,8 @@ jobs:
 
       - name: Publish
         uses: netlify/actions/cli@master
-        with: 
+        with:
           args: deploy --prod --dir=dist --message="Deploy from ${{ github.event.head_commit.message }}"
-        env: 
+        env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
