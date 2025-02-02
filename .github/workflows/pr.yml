@@ -1,0 +1,38 @@
+name: Run checks for PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn
+        run: corepack prepare yarn@4.1.0 --activate
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint and check code
+        run: yarn check
+
+      - name: Build project
+        run: yarn build
+        env:
+          NODE_ENV: production
